@@ -45,4 +45,19 @@ class Page_For_Post_Types_Functions {
 		return get_option( Page_For_Post_Types_Functions::option_name( $suffix ) );
 	}
 
+	/**
+	 * Generates stdClass for page_for_post_types object.
+	 *
+	 * @param string $name
+	 * @param string $label
+	 * @param int    $id
+	 *
+	 * @return object
+	 * @since 1.0.0
+	 */
+	public static function add_page_for_post_type_object( $name, $label, $id = 0 ) {
+
+		return (object) [ 'name' => $name, 'label' => $label, 'id' => $id ];
+	}
+
 }
