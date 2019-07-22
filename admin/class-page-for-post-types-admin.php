@@ -127,7 +127,12 @@ class Page_For_Post_Types_Admin {
 		$current_post = intval( $_GET['post'] );
 		if ( $shared->is_page_for_post_types( $current_post ) ) {
 
-			remove_post_type_support( 'page', 'editor' );
+			$obj = $shared->get_page_for_post_type_object( $current_post );
+			if ( $obj->disable_editor ) {
+
+				remove_post_type_support( 'page', 'editor' );
+
+			}
 		}
 
 	}

@@ -141,7 +141,7 @@ class Page_For_Post_Types_Shared {
 		$post_type_objects = $this->get_page_for_post_type_objects();
 		foreach ( $post_type_objects as $obj ) {
 
-			if ( $the_post === $obj->id ) {
+			if ( intval( $the_post ) === intval( $obj->id ) ) {
 
 				return $obj;
 			}
@@ -153,15 +153,23 @@ class Page_For_Post_Types_Shared {
 	/**
 	 * Generates stdClass for page_for_post_types object.
 	 *
-	 * @param string $name
-	 * @param string $label
+	 * @param string      $name
+	 * @param string      $label
+	 * @param bool        $disable_editor
+	 * @param bool|string $notice
 	 *
 	 * @return object
 	 * @since 1.0.0
 	 */
-	public function add_page_for_post_type_object( $name, $label ) {
+	public function add_page_for_post_type_object( $name, $label, $disable_editor = true, $notice = false ) {
 
-		return (object) [ 'name' => $name, 'label' => $label, 'id' => $this->get_page_for( $name ) ];
+		return (object) [
+			'name'           => $name,
+			'label'          => $label,
+			'id'             => $this->get_page_for( $name ),
+			'disable_editor' => $disable_editor,
+			'notice'         => $notice
+		];
 	}
 
 	/**
@@ -180,7 +188,7 @@ class Page_For_Post_Types_Shared {
 		$objs = $this->get_page_for_post_type_objects();
 		foreach ( $objs as $obj ) {
 
-			if ( intval( $current_post ) !== $obj->id ) {
+			if ( intval( $current_post ) !== intval( $obj->id ) ) {
 				continue;
 			}
 
