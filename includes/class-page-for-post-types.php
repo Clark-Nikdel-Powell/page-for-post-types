@@ -127,6 +127,11 @@ class Page_For_Post_Types {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-page-for-post-types-shared.php';
 
+		/**
+		 * The class responsible for defining publicly accessible functionality.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-page-for-post-types-functions.php';
+
 		$this->loader = new Page_For_Post_Types_Loader();
 
 	}
@@ -159,7 +164,7 @@ class Page_For_Post_Types {
 
 		$plugin_admin = new Page_For_Post_Types_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'add_section_setting' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'add_setting_section' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'disable_editor' );
 		$this->loader->add_action( 'edit_form_after_title', $plugin_admin, 'show_notice', 10, 1 );
 
