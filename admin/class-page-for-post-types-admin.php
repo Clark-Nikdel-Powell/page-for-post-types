@@ -66,11 +66,43 @@ class Page_For_Post_Types_Admin {
 
 		$page_id       = 'pages_for_custom_post_types';
 		$page_title    = __( 'Pages for Custom Post Types', 'page-for-post-types' );
-		$page_callback = [ $this, 'pages_for_custom_post_types_settings' ];
+		$page_callback = [ $this, 'page_for_custom_post_types_settings' ];
 		$page          = 'reading';
 
 		add_settings_section( $page_id, $page_title, $page_callback, $page );
 
+	}
+
+	public function page_for_custom_post_types_settings() {
+
+		$shared = new Page_For_Post_Types_Shared( $this->plugin_name, $this->version );
+
+		$post_types = $shared->get_page_for_post_type_objects();
+		?>
+        <p><?php printf( wp_kses( __( 'Set pages for custom post types. <a href="%s">Rebuild permalinks</a> after making any changes.', 'lcs-core' ), [ 'a' => [ 'href' => [] ] ] ), esc_url( admin_url( 'options-permalink.php' ) ) ); ?></p>
+        <table class="form-table">
+            <tbody>
+			<?php
+			foreach ( $post_types as $post_type ) {
+
+				$option_name = $shared->option_name( $post_type->name );
+				?>
+                <tr>
+                    <th scope="row"><?php printf( __( 'Page for %s', 'lcs-core' ), $post_type->label ); ?></th>
+                    <td><?php wp_dropdown_pages( [
+							'name'              => $option_name,
+							'id'                => $option_name,
+							'selected'          => get_option( $option_name ),
+							'show_option_none'  => '— Select —',
+							'option_none_value' => 0
+						] ); ?></td>
+                </tr>
+				<?php
+			}
+			?>
+            </tbody>
+        </table>
+		<?php
 	}
 
 	/**
