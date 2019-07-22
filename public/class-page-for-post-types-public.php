@@ -95,4 +95,33 @@ class Page_For_Post_Types_Public {
 		return $args;
 	}
 
+	public function filter_taxonomy_args( $args, $taxonomy, $object ) {
+
+		if ( 1 !== count( $object ) ) {
+
+			return $args;
+		}
+
+		$shared = new Page_For_Post_Types_Shared( $this->plugin_name, $this->version );
+		if ( ! $shared->get_page_for( $object[0] ) ) {
+
+			return $args;
+		}
+
+		$rewrite = isset( $args['rewrite']['slug'] ) ? $args['rewrite']['slug'] : $taxonomy;
+
+		$page_for = $shared->get_page_for( $object[0] );
+		if ( $page_for ) {
+			$rewrite = $shared->get_rewrite_slug( $page_for ) . '/' . $rewrite;
+		}
+
+		$args['rewrite'] = [
+			'slug'       => $rewrite,
+			'with_front' => false,
+		];
+
+		return $args;
+
+	}
+
 }

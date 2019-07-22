@@ -204,7 +204,7 @@ class Page_For_Post_Types_Shared {
 	/**
 	 * Returns the relative permalink for a post.
 	 *
-	 * @param int|\WP_Post $post_object
+	 * @param int|\WP_Post $the_post
 	 *
 	 * @return string
 	 * @since 1.0.0

@@ -184,6 +184,7 @@ class Page_For_Post_Types {
 		$plugin_public = new Page_For_Post_Types_Public( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_filter( 'register_post_type_args', $plugin_public, 'filter_post_type_args', 10, 2 );
+		$this->loader->add_filter( 'register_taxonomy_args', $plugin_public, 'filter_taxonomy_args', 10, 3 );
 
 	}
 
