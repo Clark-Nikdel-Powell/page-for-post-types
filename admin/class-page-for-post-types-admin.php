@@ -55,6 +55,16 @@ class Page_For_Post_Types_Admin {
 
 	}
 
+	/**
+	 * Add plugin action links.
+	 *
+	 * @param string[] $actions
+	 * @param string   $plugin_file
+	 * @param string   $plugin_data
+	 * @param string   $context
+	 *
+	 * @return array
+	 */
 	public function add_plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
 
 		$plugin_actions = [
@@ -65,7 +75,7 @@ class Page_For_Post_Types_Admin {
 	}
 
 	/**
-	 * Add settings fields.
+	 * Add settings section.
 	 *
 	 * @since 1.0.0
 	 */
@@ -82,6 +92,11 @@ class Page_For_Post_Types_Admin {
 
 	}
 
+	/**
+	 * Add settings fields.
+	 *
+	 * @since 1.0.0
+	 */
 	public function page_for_custom_post_types_settings() {
 
 		$shared = new Page_For_Post_Types_Shared( $this->plugin_name, $this->version );
