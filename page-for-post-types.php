@@ -36,6 +36,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'PAGE_FOR_POST_TYPES_VERSION', '1.0.0' );
+define( 'PAGE_FOR_POST_TYPES_PATH', plugin_basename( __FILE__ ) );
 
 /**
  * The code that runs during plugin activation.

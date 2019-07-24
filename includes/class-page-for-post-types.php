@@ -169,7 +169,7 @@ class Page_For_Post_Types {
 		$this->loader->add_action( 'edit_form_after_title', $plugin_admin, 'show_notice', 10, 1 );
 
 		$this->loader->add_filter( 'display_post_states', $plugin_admin, 'filter_post_states', 10, 2 );
-
+		$this->loader->add_filter( 'plugin_action_links_' . PAGE_FOR_POST_TYPES_PATH, $plugin_admin, 'add_plugin_action_links', 10, 4 );
 	}
 
 	/**

@@ -55,6 +55,15 @@ class Page_For_Post_Types_Admin {
 
 	}
 
+	public function add_plugin_action_links( $actions, $plugin_file, $plugin_data, $context ) {
+
+		$plugin_actions = [
+			'settings' => sprintf( '<a href="%1$s">%2$s</a>', esc_url( admin_url( 'options-reading.php' ) ), __( 'Settings', 'lcs-core' ) ),
+		];
+
+		return array_merge( $plugin_actions, $actions );
+	}
+
 	/**
 	 * Add settings fields.
 	 *
