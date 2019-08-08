@@ -166,10 +166,12 @@ class Page_For_Post_Types {
 
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'add_setting_section' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'disable_editor' );
+		$this->loader->add_action( 'admin_bar_menu', $plugin_admin, 'add_edit_link_for_post_type_pages', 80, 1 );
 		$this->loader->add_action( 'edit_form_after_title', $plugin_admin, 'show_notice', 10, 1 );
 
 		$this->loader->add_filter( 'display_post_states', $plugin_admin, 'filter_post_states', 10, 2 );
 		$this->loader->add_filter( 'plugin_action_links_' . PAGE_FOR_POST_TYPES_PATH, $plugin_admin, 'add_plugin_action_links', 10, 4 );
+
 	}
 
 	/**
