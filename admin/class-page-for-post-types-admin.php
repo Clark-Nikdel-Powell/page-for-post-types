@@ -222,4 +222,65 @@ class Page_For_Post_Types_Admin {
 
 	}
 
+	/**
+     * Filter the admin bar.
+     *
+	 * @param \WP_Admin_Bar $wp_admin_bar
+	 *
+	 * @return bool
+	 * @since 1.0.0
+	 */
+	public function add_edit_link_for_post_type_pages( $wp_admin_bar ) {
+
+		if ( is_404() ) {
+
+			$page_id = Page_For_Post_Types_Functions::get_page_for( '404' );
+			if ( ! $page_id ) {
+				return false;
+			}
+
+			$this->add_admin_bar_menu( $wp_admin_bar, $page_id, 'Edit 404 Page' );
+
+			return true;
+		}
+
+		if ( is_post_type_archive() || is_tax() ) {
+
+			$post_type = get_post_type();
+			$page_id   = Page_For_Post_Types_Functions::get_page_for( $post_type );
+			if ( ! $page_id ) {
+				return false;
+			}
+
+			$this->add_admin_bar_menu( $wp_admin_bar, $page_id );
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+     * Add admin be menu links
+     *
+	 * @param \WP_Admin_Bar $wp_admin_bar
+	 * @param int|string    $page_id
+	 * @param string        $title
+	 *
+	 * @since 1.0.0
+	 */
+	public function add_admin_bar_menu( $wp_admin_bar, $page_id, $title = 'Edit Archive Page' ) {
+
+		if ( empty( $page_id ) ) {
+			return;
+		}
+
+		$wp_admin_bar->add_menu( array(
+			'id'    => 'edit',
+			'title' => apply_filters( 'page_for_post_types_admin_bar_menu_title', $title ),
+			'href'  => apply_filters( 'page_for_post_types_admin_bar_menu_link', get_edit_post_link( $page_id ) ),
+		) );
+
+	}
+
 }
