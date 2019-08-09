@@ -44,7 +44,7 @@ class Page_For_Post_Types_Admin {
 	 * Initialize the class and set its properties.
 	 *
 	 * @param string $plugin_name The name of this plugin.
-	 * @param string $version     The version of this plugin.
+	 * @param string $version The version of this plugin.
 	 *
 	 * @since    1.0.0
 	 */
@@ -55,13 +55,74 @@ class Page_For_Post_Types_Admin {
 
 	}
 
+	public function update_options() {
+
+		// First, get our post types.
+		$shared     = new Page_For_Post_Types_Shared( $this->plugin_name, $this->version );
+		$post_types = $shared->get_page_for_post_type_objects();
+
+		$page_for_post_types_keys = get_option( 'page_for_post_types_keys' );
+
+		foreach ( $post_types as $post_type ) {
+			$option_name        = $shared->option_name( $post_type->name );
+			$page_for_post_type = intval( get_option( $option_name ) ); // Note that options are converted to strings on save-- we have to convert back to an integer.
+
+            if ( 0 === $page_for_post_type ) {
+                $page_for_post_type = false;
+            }
+
+			// Add or update the plural version of the option name
+			$plural_option_name = false;
+			if ( 's' !== substr( $option_name, - 1 )  && 0 !== $page_for_post_type ) {
+				$plural_option_name = $option_name . 's';
+				update_option( $plural_option_name, $page_for_post_type );
+			}
+
+			// Add the option name
+			if ( ! in_array( $option_name, $page_for_post_types_keys, true ) && false !== $page_for_post_type ) {
+				$page_for_post_types_keys[] = $option_name;
+			}
+
+			// Add the plural if it's not there already.
+			if ( ! in_array( $plural_option_name, $page_for_post_types_keys, true ) && false !== $page_for_post_type && false !== $plural_option_name ) {
+				$page_for_post_types_keys[] = $plural_option_name;
+			}
+
+			// Now handle removing the option names if the value is 0.
+			if ( false === $page_for_post_type ) {
+
+				// Don't save zeros.
+				delete_option( $option_name );
+
+				$option_name_key = array_search( $option_name, $page_for_post_types_keys );
+				if ( false !== $option_name_key ) {
+					unset( $page_for_post_types_keys[ $option_name_key ] );
+				}
+
+				if ( false !== $plural_option_name ) {
+
+					// Don't save zeros.
+					delete_option( $plural_option_name );
+
+					$plural_option_name_key = array_search( $plural_option_name, $page_for_post_types_keys );
+
+					if ( false !== $plural_option_name_key ) {
+						unset( $page_for_post_types_keys[ $plural_option_name_key ] );
+					}
+				}
+			}
+		}
+
+		update_option( 'page_for_post_types_keys', $page_for_post_types_keys );
+	}
+
 	/**
 	 * Add plugin action links.
 	 *
 	 * @param string[] $actions
-	 * @param string   $plugin_file
-	 * @param string   $plugin_data
-	 * @param string   $context
+	 * @param string $plugin_file
+	 * @param string $plugin_data
+	 * @param string $context
 	 *
 	 * @return array
 	 */
@@ -113,17 +174,22 @@ class Page_For_Post_Types_Admin {
 				?>
                 <tr>
                     <th scope="row"><?php printf( __( 'Page for %s', 'lcs-core' ), $post_type->label ); ?></th>
-                    <td><?php wp_dropdown_pages( [
+                    <td>
+						<?php
+						wp_dropdown_pages( [
 							'name'              => $option_name,
 							'id'                => $option_name,
 							'selected'          => get_option( $option_name ),
 							'show_option_none'  => '— Select —',
 							'option_none_value' => 0
-						] ); ?></td>
+						] );
+						?>
+                    </td>
                 </tr>
 				<?php
 			}
 			?>
+            <input type="hidden" name="page_for_post_type_keys_hidden" value="0"/>
             </tbody>
         </table>
 		<?php
@@ -194,9 +260,20 @@ class Page_For_Post_Types_Admin {
 		$post_types = $shared->get_page_for_post_type_objects();
 		foreach ( $post_types as $post_type ) {
 
-			register_setting( 'reading', $shared->option_name( $post_type->name ), [ 'type' => 'integer' ] );
+			register_setting( 'reading', $shared->option_name( $post_type->name ), [
+				'type'              => 'integer',
+				'sanitize_callback' => [
+					$this,
+					'sanitize_input_save'
+				]
+			] );
 		}
 
+		register_setting( 'reading', 'page_for_post_type_keys_hidden', [ 'type' => 'hidden' ] );
+	}
+
+	public function sanitize_input_save( $option_value ) {
+		return ( 0 === intval( $option_value ) ? false : $option_value );
 	}
 
 	/**
@@ -223,8 +300,8 @@ class Page_For_Post_Types_Admin {
 	}
 
 	/**
-     * Filter the admin bar.
-     *
+	 * Filter the admin bar.
+	 *
 	 * @param \WP_Admin_Bar $wp_admin_bar
 	 *
 	 * @return bool
@@ -261,11 +338,11 @@ class Page_For_Post_Types_Admin {
 	}
 
 	/**
-     * Add admin be menu links
-     *
+	 * Add admin be menu links
+	 *
 	 * @param \WP_Admin_Bar $wp_admin_bar
-	 * @param int|string    $page_id
-	 * @param string        $title
+	 * @param int|string $page_id
+	 * @param string $title
 	 *
 	 * @since 1.0.0
 	 */

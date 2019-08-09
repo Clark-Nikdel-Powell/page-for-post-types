@@ -30,9 +30,13 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-$page_for_post_types_uuid = get_option( 'page_for_post_types_uuid' );
+// Get the option that holds the post type page option names.
+$page_for_post_types_keys = get_option( 'page_for_post_types_keys' );
 
-global $wpdb;
-$wpdb->query( $wpdb->prepare( 'DELETE FROM `{$wpdb->prefix}options` WHERE option_name LIKE %s', $wpdb->esc_like( $page_for_post_types_uuid ) . '%' ) );
+// Delete each individual post type page option.
+foreach ( $page_for_post_types_keys as $page_for_post_types_key ) {
+	delete_option( $page_for_post_types_key );
+}
 
-delete_option( 'page_for_post_types_uuid' );
+// Finally, delete the key option.
+delete_option( 'page_for_post_types_keys' );

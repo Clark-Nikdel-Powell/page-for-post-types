@@ -63,17 +63,6 @@ class Page_For_Post_Types_Shared {
 	}
 
 	/**
-	 * Retrieves the UUID set on plugin activation.
-	 *
-	 * @return mixed|void
-	 * @since 1.0.0
-	 */
-	public function get_uuid() {
-
-		return get_option( 'page_for_post_types_uuid' );
-	}
-
-	/**
 	 * Returns the option setting.
 	 *
 	 * @param string $suffix
@@ -96,9 +85,7 @@ class Page_For_Post_Types_Shared {
 	 */
 	public function option_name( $suffix ) {
 
-		$prefix = $this->get_uuid();
-
-		return sprintf( '%1$s_page_for_%2$s', $prefix, $suffix );
+		return sprintf( 'page_for_%1$s', $suffix );
 	}
 
 	/**
