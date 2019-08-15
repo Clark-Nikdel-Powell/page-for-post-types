@@ -31,11 +31,5 @@ class Page_For_Post_Types_Activator {
 	 */
 	public static function activate() {
 
-		$uuid = get_option( 'page_for_post_types_uuid' );
-		if ( ! $uuid ) {
-			$uuid = wp_generate_uuid4();
-			update_option( 'page_for_post_types_uuid', $uuid, true );
-		}
 	}
-
 }

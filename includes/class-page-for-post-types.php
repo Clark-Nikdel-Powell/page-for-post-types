@@ -172,6 +172,7 @@ class Page_For_Post_Types {
 		$this->loader->add_filter( 'display_post_states', $plugin_admin, 'filter_post_states', 10, 2 );
 		$this->loader->add_filter( 'plugin_action_links_' . PAGE_FOR_POST_TYPES_PATH, $plugin_admin, 'add_plugin_action_links', 10, 4 );
 
+		$this->loader->add_action( 'pre_update_option_page_for_post_type_keys_hidden', $plugin_admin, 'update_options', 20, 0 );
 	}
 
 	/**
