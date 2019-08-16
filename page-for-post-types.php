@@ -18,7 +18,7 @@
  * Description:       Select pages to use as custom post type archives just like the native WordPress <code>page_for_posts</code> setting.
  * Version:           1.0.0
  * Author:            CNP
- * Author URI:        https://cnpagency.com
+ * Author URI:        https://cnpagency.com/people/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       page-for-post-types
