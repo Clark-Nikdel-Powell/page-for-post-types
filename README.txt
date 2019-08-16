@@ -1,10 +1,10 @@
-=== Plugin Name ===
-Contributors: gwelser
+=== Page for Post Types ===
+Contributors: gwelser, jhned
 Donate link: https://cnpagency.com
 Tags: page, post, custom post type
-Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 4.3
+Requires at least: 5.1
+Tested up to: 5.2
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,103 +12,56 @@ Select pages to use as custom post type archives just like the native WordPress 
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+Manage a Custom Post Type Archive’s content, meta, title, and location through a WordPress Page instead of squirreling away content elsewhere.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+This plugin makes it possible to set Static Pages for Custom Post Types, much like [how you can set](https://wordpress.org/support/article/creating-a-static-front-page/) a Static Front Page or a Posts Page through the WordPress Reading Settings.
 
-A few notes about the sections above:
+The plugin extends this WordPress core feature as close as possible.
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
+1. The Page URL overrides the custom post type’s  `has_archive` setting.
+2. The Page Title takes the place of the post type archive label setting.
+3. An “Edit Archive Page” link is added to the WordPress Admin Bar on the front-end.
+4. “— (Post Type Label) Page” is added to the Pages Edit Screen next to the Page title, like how WordPress adds “— Posts Page” or “— Home Page” next to the Blog and Home pages.
+5. Any additional content or post meta set on the Page is available for display on the post type archive.
+6. There’s also a feature to specify a 404 page so that the 404 page content can be managed through the WordPress admin.
 
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
+== Usage ==
 
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+The static page for post types feature is not activated for all custom post types by default. To enable it, add the following argument to `register_post_type`:
 
-== Installation ==
+```
+has_post_type_page => true
+```
 
-This section describes how to install the plugin and get it working.
+If you don’t have access to the post type registration code, filter the post type registration args like this:
 
-e.g.
+```
+add_filter( 'register_post_type_args', function ( $args, $post_type ) {
+	$args['page_for_post_type'] = true;
 
-1. Upload `page-for-post-types.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+	return $args;
+}, 1, 2 );
+```
 
-== Frequently Asked Questions ==
+## How to select a static page for a custom post type
+To set a Page for a Custom Post Type, go to the WordPress Reading Settings. Under “Pages for Custom Post Types,” you’ll see all post types that are available, and a select box of pages. Select a page and save.
 
-= A question that someone might have =
+## How to get the page for a specific post type
+Once you’ve set a Page for a Post Type, you can get that page in your themes and plugins by using the `get_option` function. If you had a post type named “book,” the function call would be:
 
-An answer to that question.
+```
+$books_page = get_option( 'page_for_book' );
+```
 
-= What about foo bar? =
+Since WordPress uses the option name `page_for_posts` and not `page_for_post`, we also try to store the plural version of the post type name by tacking a "s" to the end of the post type name if the post type does not already end in "s."
 
-Answer to foo bar dilemma.
+For example, if the post type is named "book," either of these options will work:
+
+```
+$books_page = get_option( 'page_for_book' );
+$books_page = get_option( 'page_for_books' );
+```
+
+On the other hand, if the post type is named "books," the only option that will work is `page_for_books`.
 
 == Screenshots ==
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
-
-== Changelog ==
-
-= 1.0 =
-* A change since the previous version.
-* Another change.
-
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
-
-== Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
-
-== Arbitrary section ==
-
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
