@@ -1,6 +1,5 @@
 === Page for Post Types ===
 Contributors: gwelser, jhned
-Donate link: https://cnpagency.com
 Tags: page, post, custom post type
 Requires at least: 5.1
 Tested up to: 5.2
