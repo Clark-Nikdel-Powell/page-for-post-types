@@ -51,7 +51,7 @@ class Page_For_Post_Types_Shared {
 	 * Page_For_Post_Types_Shared constructor.
 	 *
 	 * @param string $plugin_name The name of this plugin.
-	 * @param string $version     The version of this plugin.
+	 * @param string $version The version of this plugin.
 	 *
 	 * @since 1.0.0
 	 */
@@ -102,7 +102,8 @@ class Page_For_Post_Types_Shared {
 
 		foreach ( $post_types as $post_type ) {
 			$post_type_object = get_post_type_object( $post_type );
-			$objs[]           = $this->add_page_for_post_type_object( $post_type_object->name, $post_type_object->label );
+			$disable_editor   = ( isset( $post_type_object->post_type_page_disable_editor ) ? $post_type_object->post_type_page_disable_editor : true );
+			$objs[]           = $this->add_page_for_post_type_object( $post_type_object->name, $post_type_object->label, $disable_editor );
 		}
 
 		/**
@@ -140,9 +141,9 @@ class Page_For_Post_Types_Shared {
 	/**
 	 * Generates stdClass for page_for_post_types object.
 	 *
-	 * @param string      $name
-	 * @param string      $label
-	 * @param bool        $disable_editor
+	 * @param string $name
+	 * @param string $label
+	 * @param bool $disable_editor
 	 * @param bool|string $notice
 	 *
 	 * @return object
