@@ -29,6 +29,10 @@ add_filter( 'register_post_type_args', function ( $args, $post_type ) {
 }, 1, 2 );
 ```
 
+## Keep editor enabled for custom post type archive page.
+
+Use `'post_type_page_disable_editor' => false,` to keep the editor enabled for the custom post type archive page. This way, you can include content on a post type archive page that's intended to supplement the posts loop. You will most likely need to customize your theme in order to wire up this content to the archive page.
+
 ## How to select a static page for a custom post type
 To set a Page for a Custom Post Type, go to the WordPress Reading Settings. Under “Pages for Custom Post Types,” you’ll see all post types that are available, and a select box of pages. Select a page and save.
 
